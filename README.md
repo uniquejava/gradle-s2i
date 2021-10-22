@@ -2,25 +2,16 @@
 
 https://docs.openshift.com/online/pro/using_images/s2i_images/java.html
 
-redhat-openjdk18-openshift (RHEL 7, JDK 8)
-
-ubi8-openjdk-11 (RHEL UBI 8, JDK 11)
-
-ubi8-openjdk-8 (RHEL UBI 8, JDK 8)
-
-openjdk-11-rhel7 (RHEL 7, JDK 11)
-
 ## Build from scratch
 
 ```
 $ export GRADLE_VERSION=7.2
-$ export OPENJDK_IMAGE_STREAM_VERSION=1.10
 $ oc new-project gradle-s2i-builder
 $ oc new-build \
     --name gradle-s2i \
     --build-arg GRADLE_VERSION=$GRADLE_VERSION,OLD_S2I_PATH=/usr/local/s2i \
     --context-dir docker \
-    -i openjdk-11-rhel7:$OPENJDK_IMAGE_STREAM_VERSION \
+    -i openshift/java:openjdk-11-el7
     --strategy docker \
     https://github.com/uniquejava/gradle-s2i
 
@@ -48,3 +39,28 @@ $ oc create -f openshift/springboot-gradle-s2i-template-1.yaml
 $ oc new-app springboot-gradle-s2i \
     -p IMAGE_STREAM_NAMESPACE hello-gradle
 ```
+
+## OpenShift 自带的 ImageStream
+
+如何确定`oc new-build -i` 的值有哪些？
+
+Administrator: Builds -> Images Streams
+
+![How to get image stream name](docs/assets/image%20stream%20name.png)
+
+The argument "java:openjdk-11-rhel7" could apply to the following Docker images, OpenShift image streams, or templates:
+
+- Image stream "java" (tag "latest") in project "openshift"
+  Use --image-stream="openshift/java:latest" to specify this image or template
+
+- Image stream "java" (tag "openjdk-11-el7") in project "openshift"
+  Use --image-stream="openshift/java:openjdk-11-el7" to specify this image or template
+
+- Image stream "java" (tag "openjdk-11-ubi8") in project "openshift"
+  Use --image-stream="openshift/java:openjdk-11-ubi8" to specify this image or template
+
+- Image stream "java" (tag "openjdk-8-el7") in project "openshift"
+  Use --image-stream="openshift/java:openjdk-8-el7" to specify this image or template
+
+- Image stream "java" (tag "openjdk-8-ubi8") in project "openshift"
+  Use --image-stream="openshift/java:openjdk-8-ubi8" to specify this image or template
