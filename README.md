@@ -1,18 +1,28 @@
 # Gradle S2I OpenShift builder
 
+https://docs.openshift.com/online/pro/using_images/s2i_images/java.html
+
+redhat-openjdk18-openshift (RHEL 7, JDK 8)
+
+ubi8-openjdk-11 (RHEL UBI 8, JDK 11)
+
+ubi8-openjdk-8 (RHEL UBI 8, JDK 8)
+
+openjdk-11-rhel7 (RHEL 7, JDK 11)
+
 ## Build from scratch
 
 ```
-$ export GRADLE_VERSION=4.9
-$ export OPENJDK_IMAGE_STREAM_VERSION=1.3
+$ export GRADLE_VERSION=7.2
+$ export OPENJDK_IMAGE_STREAM_VERSION=1.10
 $ oc new-project gradle-s2i-builder
 $ oc new-build \
     --name gradle-s2i \
     --build-arg GRADLE_VERSION=$GRADLE_VERSION,OLD_S2I_PATH=/usr/local/s2i \
     --context-dir docker \
-    -i redhat-openjdk18-openshift:$OPENJDK_IMAGE_STREAM_VERSION \
+    -i openjdk-11-rhel7:$OPENJDK_IMAGE_STREAM_VERSION \
     --strategy docker \
-    https://github.com/dsevost/gradle-s2i
+    https://github.com/uniquejava/gradle-s2i
 
 $ oc new-app \
     --name hello-gradle \
